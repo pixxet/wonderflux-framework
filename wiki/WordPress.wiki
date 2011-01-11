@@ -1,0 +1,15 @@
+#summary WordPress is an open source publishing platform.
+
+= Introduction =
+
+Wonderflux is specifically designed and optimised to run on WordPress.
+
+http://wordpress.org
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
