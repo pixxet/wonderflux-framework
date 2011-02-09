@@ -1,35 +1,5 @@
-!! WARNING !!
-
-You have downloaded an Alpha development version of the working source code 
-from the trunk of the development code! THIS MAY NOT BE 100% STABLE!!
-
-If you are using this for development purposes, You should probably make sure 
-you have the latest version available from:
-
-http://code.google.com/p/wonderflux-girder-theme/source/checkout
-
-The 3 directories are:
-
-branches - Holds any advanced development and experiments
-tags - Holds the released versions (same as zip files)
-trunk - Holds the latest development version that is being worked on
-
-Zip packages of stable release beta versions of Wonderflux are available from:
-http://code.google.com/p/wonderflux-framework/downloads/
-
-THIS VERSION IS FOR TESTING AND FEEDBACK ONLY, AND ALTHOUGH EVERYTHING
-WILL PROBABLY BE FINE YOU PROBABLY SHOULD NOT RUN THIS VERSION ON LIVE SITES!
-
-There may also be problems with child themes, for testing compatibility we run
-the trunk version of WFX Girder theme, which is developed to use the latest 
-code, structure and functionality in development.
-
-http://wonderflux-girder-theme.googlecode.com
-
-= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
 WONDERFLUX WORDPRESS THEME FRAMEWORK
-VERSION 0.913 ALPHA
+VERSION 0.913
 
 Copyright (C) 2011 Jonny Allbut - Jonnya Freelance Creative www.jonnya.net
 
@@ -223,9 +193,59 @@ CHANGE NOTES
 We just show the last two versions, all previous reference can be found at
 http://code.google.com/p/wonderflux-framework/updates/list
 
-WONDERFLUX VERSION 0.913 - < DATE HERE > 2011
+WONDERFLUX VERSION 0.913 - Feb 9th 2011
 
-< 0.913 REVISIONS HERE >
+r46 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=46
+- Code tidying for consistency, nothing major here!
+
+r45 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=45
+- More logical, shorter params on wfx_perma_img function
+
+r44 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=44
+- More logical, shorter params on wfx_perma_img function
+
+r43 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=43
+- New params for controlling div output around edit_meta output
+
+r42 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=42
+- Completed main reorganisation of core code structure.
+- This should mean no more changes for child theme developers!
+
+r41 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=41
+- Minor bug catching
+
+r40 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=40
+- Cleanup core display files left from testing (no more over-rides when you don't want them!)
+
+r39 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=39
+- BIG UPDATE FOR CHILD THEME DEVELOPERS, PLEASE SEE LATEST VERSION OF WFX GIRDER FOR DEMO - Things just got a-lot simpler for you!
+- Standardised ALL user functions with prefix wfx_
+- Cleanup core theme files where required
+- NO MORE $global in child themes!
+
+r37-38 Versioning and typo updates
+
+r36 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=36
+- Version number update
+
+r35 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=35
+- First preparation for translation
+
+r34 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=34
+- Big update to internal structure.
+- Testing solutions whist completing restructure of core (the guidance no longer applies - see later revisions)
+
+r33 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=33
+- Readme amends
+
+r32 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=32
+- Use get_template_directory_uri() instead
+
+r31 (committed by jonnya) http://code.google.com/p/wonderflux-framework/source/detail?r=31
+- Correct escape of output bugs
+
+r29-30 Versioning and number updates
+
 
 WONDERFLUX VERSION 0.912 - Jan 23th 2011
 
