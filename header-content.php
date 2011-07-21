@@ -1,13 +1,10 @@
 <?php
-/*
- * Core Wonderflux header content template part
- *
- * Customise this in your child theme by:
- * - Using hooks and your own functions
- * - Using the 'header-content' template part 'header-content-404.php' or 'header-content.php' (fallback if location specific file not available)
- * - Copying this file to your child theme and customising - it will over-ride this file
+/**
+ * The core get_template_part header content
+ * This will be over-ridden if you create a file of the same name in your child theme
  *
  * @package Wonderflux
+ * @since Wonderflux 0.6
  */
 ?>
 <div <?php wfx_css('size=full&id=header-content'); ?>>

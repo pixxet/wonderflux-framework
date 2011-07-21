@@ -5,7 +5,7 @@
 /**
 *
 * @since 0.891
-* @updated 0.93
+* @updated 0.92
 *
 * Core template functions
 *
@@ -35,7 +35,6 @@ class wflux_theme_core {
 		$this->js_cycle_host = 'wonderflux';
 		$this->js_cycle_version = 'normal';
 		$this->js_cycle_config = 'wonderflux';
-		$this->js_cycle_location = 'footer';
 
 	}
 
@@ -45,7 +44,7 @@ class wflux_theme_core {
 	*
 	* @param $name - The name of the widget (shows in admin widget editor area) [Incremental number]
 	* @param $description - Description of widget (shows in admin widget editor area) [Drag widgets into here to include them in your site]
-	* @param $location - Inserts the widget using Wonderflux display hooks - supply value "my_theme_code" to turn this off [wfsidebar_after_all]
+	* @param $location - Inserts the widget using Wonderflux display hooks - supply value "my_custom_theme_code" to turn this off [wfsidebar_after_all]
 	* @param $container - What do you want the Widget to be contained in - eg "div", "li" [div]
 	* @param $containerclass - Container CSS class [widget-box]
 	* @param $containerid - ADVANCED USE ONLY - Sets CSS ID (Only use this if your widget area has one widget - otherwise the ID's are repeated, which is not good and breaks validation for obvious reasons!) [NONE]
@@ -54,22 +53,22 @@ class wflux_theme_core {
 	* @param $titleid - ADVANCED USE ONLY - Sets CSS ID (Only use this if your widget area has one widget - otherwise the ID's are repeated, which is not good and breaks validation for obvious reasons!) [NONE]
 	* @param $before - Anything you want before the widget [NONE]
 	* @param $after - Anything you want after the widget [NONE]
-	* @param $priority - Insertion hook priority - NOTE default CSS containers insert at priority 2 and 9 [3]
 	*
 	* NOTE:
-	* Easiest way to insert a widget into your theme code rather than use a Wonderflux hook is:
-	* (where widget name was set as 'Front Page Sidebar')
-	* if ( !dynamic_sidebar('front-page-sidebar') ) : echo 'no widget content';
+	* Easiest way to hardcode a widget into your theme rather than use a Wonderflux hook is:
+	*
+	* Example where widget name was set as 'Front Page Sidebar':
+	* //if ( !dynamic_sidebar('front-page-sidebar') ) : echo 'no widget content';
 	*
 	* Also of use is:
-	* if ( is_active_sidebar('front-page-sidebar') ) :
-	*   echo 'has active widgets in widget area';
-	* else :
-	*   echo 'no active widgets';
-	* endif;
+	* //if ( is_active_sidebar('front-page-sidebar') ) :
+	* // echo 'has active widgets in widget area';
+	* //else :
+	* // echo 'no active widgets';
+	* //endif;
 	*
 	* @since 0.891
-	* @updated 0.93
+	* @updated 0.912
 	*
 	*
 	*/
@@ -96,8 +95,7 @@ class wflux_theme_core {
 			"titleclass" => "widget-title",
 			"titleid" => "",
 			"before" => "",
-			"after" => "",
-			"priority" => 3
+			"after" => ""
 			);
 
 			$values = wp_parse_args( $values, $defaults );
@@ -113,24 +111,21 @@ class wflux_theme_core {
 				$titleid = ' id="' . esc_attr($titleid) . '"';
 			}
 
-			$clean_name = esc_attr( strtolower( str_replace(' ', '-', $name) ) );
-
 			// Setup this widget using our options WordPress stylee
 			register_sidebar(array(
 				'name'=> __($name),
 				'description' => __($description),
-				'before_widget' => esc_attr($before) . '<' . esc_attr($container) . ' class="'. esc_attr($containerclass) . ' widget-' . esc_attr($clean_name) .'"' . esc_attr($containerid) . '>',
+				'before_widget' => esc_attr($before) . '<' . esc_attr($container) . ' class="'. esc_attr($containerclass) .'"' . esc_attr($containerid) . '>',
 				'after_widget' => '</' . esc_attr($container) . '>' . esc_attr($after),
 				'before_title' => '<' . esc_attr($titlestyle) . ' class="'. esc_attr($titleclass) .'"' . esc_attr($titleid) . '>',
 				'after_title' => '</' . esc_attr($titlestyle) . '>',
 			));
 
 			// Insert the widget area using Wonderflux display hooks
-			// IMPORTANT: If you wish to insert the widget area manually into your theme supply 'my_theme_code' as the 'location' parameter.
+			// IMPORTANT: If you wish to insert the widget area manually into your theme supply 'my_custom_theme_code' as the 'location' parameter.
 			// You will then need to insert your widget area using the name parameter into your theme manually using standard WordPress theme code.
-			if ($location != 'my_theme_code') {
-				$priority = (is_numeric($priority)) ? $priority : 3;
-				add_action( $location, create_function( '$name', "dynamic_sidebar( '$name' );" ), $priority );
+			if ($location != 'N') {
+				add_action( $location, create_function( '$name', "dynamic_sidebar( '$name' );" ) );
 			}
 
 			// Unset ready for next
@@ -145,7 +140,6 @@ class wflux_theme_core {
 			unset($titleid);
 			unset($before);
 			unset($after);
-			unset($priority);
 
 		}
 
@@ -334,7 +328,7 @@ class wflux_theme_core {
 	* @param $location Where you want your JQuery inserted in the code - Default = 'footer' ['header,'footer']
 	*
 	* @since 0.92
-	* @updated 0.921
+	* @updated 0.92
 	*/
 	function wf_js_cycle($args) {
 
@@ -347,7 +341,7 @@ class wflux_theme_core {
 				'jquery_host' => $this->js_jquery_host,
 				'jquery_version' => $this->js_jquery_version,
 				'jquery_key' => $this->google_api_key,
-				'location' => $this->js_cycle_location
+				'location' => 'footer'
 			);
 
 			$args = wp_parse_args( $args, $defaults );
@@ -360,10 +354,9 @@ class wflux_theme_core {
 			$this->js_jquery_host = wp_kses_data($jquery_host, '');
 			$this->js_jquery_version = wp_kses_data($jquery_version, '');
 			$this->google_api_key = wp_kses_data($jquery_key, '');
-			$this->js_cycle_location = wp_kses_data($location, '');
 
 			//Enque and insert JQuery if required
-			$this->wf_js_jquery('host='.$this->js_jquery_host.'&version='.$this->js_jquery_version.'&key='.$this->google_api_key.'&location='.$this->js_cycle_location);
+			$this->wf_js_jquery('host='.$this->js_jquery_host.'&version='.$this->js_jquery_version.'&key='.$this->google_api_key.'');
 
 			//Enque and insert Cycle
 			if ($location == 'footer') { $location_out = 'wf_footer'; } else { $location_out = 'wf_head_meta'; }

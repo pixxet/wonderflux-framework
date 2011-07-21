@@ -2,7 +2,7 @@
 //TODO: Setup for translation
 /**
 * @since 0.913
-* @updated 0.93
+* @updated 0.92
 * Core display functions that output code
 */
 class wflux_display_code extends wflux_data {
@@ -155,8 +155,6 @@ class wflux_display_code extends wflux_data {
 			echo '</title>';
 		}
 
-		echo "\n";
-
 	}
 
 
@@ -164,163 +162,155 @@ class wflux_display_code extends wflux_data {
 	* Inserts structure CSS
 	*
 	* @since 0.72
-	* @updated 0.93
+	* @updated 0.913
 	*/
-	function wf_head_css_structure() {
-		if (WF_THEME_FRAMEWORK_REPLACE == false) {
-			$path = WF_CONTENT_URL . '/css/wf-css-core-structure.css';
-			$version = WF_VERSION;
-			$id = 'wfx-structure';
+	function wf_head_css_structure($args) {
+		// Default
+		$structure_path = WF_CONTENT_URL . '/css/wf-css-core-structure.css';
+		// Allow filtering
+		$structure_path = apply_filters( 'wflux_head_css_structure_path', $structure_path );
 
-			// Allow filtering
-			$path = apply_filters( 'wflux_css_structure_path', $path );
-			$version = apply_filters( 'wflux_css_structure_version', $version );
-			$id = apply_filters( 'wflux_css_structure_id', $id );
+		$structure_output = '<link rel="stylesheet" href="'. $structure_path .'" type="text/css" media="screen, projection"/>';
 
-			wp_register_style( $id , $path,'',$version,'screen, projection' );
-			wp_enqueue_style( $id );
-		}
+		$structure_output = apply_filters( 'wflux_head_css_structure', $structure_output );
+		$structure_output .= "\n";
+
+		echo $structure_output;
+	}
+
+
+	/**
+	* Inserts typography CSS
+	*
+	* @since 0.72
+	* @updated 0.913
+	*/
+	function wf_head_css_typography($args) {
+		// Default
+		$typography_path = WF_CONTENT_URL . '/css/wf-css-core-typography.css';
+		// Allow filtering
+		$typography_path = apply_filters( 'wflux_head_css_typography_path', $typography_path );
+
+		$typography_output = '<link rel="stylesheet" href="'. $typography_path .'" type="text/css" media="screen, projection"/>';
+
+		$typography_output = apply_filters( 'wflux_head_css_typography', $typography_output );
+		$typography_output .= "\n";
+
+		echo $typography_output;
+	}
+
+
+	/**
+	* Inserts theme CSS
+	*
+	* @since 0.72
+	* @updated 0.72
+	*/
+	function wf_head_css_theme($args) {
+		// Default
+		$theme_path = get_bloginfo('stylesheet_url');
+		// Allow filtering
+		$theme_path = apply_filters( 'wflux_head_css_theme_path', $theme_path );
+
+		$theme_output = '<link rel="stylesheet" href="'. $theme_path .'" type="text/css" media="screen, projection"/>';
+
+		$theme_output = apply_filters( 'wflux_head_css_theme', $theme_output );
+		$theme_output .= "\n";
+
+		echo $theme_output;
 	}
 
 
 	/**
 	* @since 0.72
-	* @updated 0.93
+	* @updated 0.913
 	* Dynamic grid builder
+	* TODO: Allow filtering on figures
 	*/
 	function wf_head_css_columns($args) {
-		if (WF_THEME_FRAMEWORK_REPLACE == false) {
-			$path = WF_CONTENT_URL . '/css/wf-css-dynamic-columns.php';
-			$version = 'wfx-dynamic';
-			$id = 'wfx-columns';
-			$media = 'screen, projection';
 
-			// Allow filtering
-			$path = apply_filters( 'wflux_css_columns_path', $path );
-			$version = apply_filters( 'wflux_css_columns_version', $version );
-			$id = apply_filters( 'wflux_css_columns_id', $id );
-			$media = apply_filters( 'wflux_css_columns_media', $media );
-			wp_register_style( $id, $path,'', $version, $media );
-			wp_enqueue_style( $id );
+		$container_w = $this->wfx_width; //Overall container width
+		$container_p = $this->wfx_position; //Site container position
+		$sidebar_p = $this->wfx_sidebar_primary_position; //Site container position
+		//$padding_l = $options['padding_l']; // Container padding left
+		//$padding_r = $options['padding_r']; // Container padding right
+		$columns_num = $this->wfx_columns; // Number of columns
+		$columns_w = $this->wfx_columns_width;	// Width of column
 
-			// IMPORTANT - Append layout arguments to url
-			add_filter( 'style_loader_tag', array($this,'wf_head_css_add_args'));
-		}
+		// Default
+		$columns_path = WF_CONTENT_URL . '/css/wf-css-dynamic-columns.php?w='.$container_w;
+		$columns_path .= '&amp;p='.$container_p;
+		$columns_path .= '&amp;sbp='.$sidebar_p;
+		$columns_path .= '&amp;cw='.$columns_w;
+		$columns_path .= '&amp;c='.$columns_num;
+		$columns_path .= '';
+
+		// Allow filtering
+		$columns_path = apply_filters( 'wflux_head_css_columns_path', $columns_path );
+
+		$columns_output = '<link rel="stylesheet" href="'. $columns_path .'" type="text/css" media="screen, projection"/>';
+
+		$columns_output = apply_filters( 'wflux_head_css_columns', $columns_output );
+		$columns_output .= "\n";
+
+		echo $columns_output;
 	}
 
 
 	/**
 	* @since 0.80
-	* @updated 0.93
+	* @updated 0.913
 	* Core layout grid CSS
 	*/
 	function wf_head_css_ie($args) {
-		if (WF_THEME_FRAMEWORK_REPLACE == false) {
-			$path = WF_CONTENT_URL . '/css/wf-css-dynamic-core-ie.php';
-			$version = 'wfx-dynamic';
-			$id = 'wfx-ie';
-			$media = 'screen, projection';
-			// Allow filtering
-			$path = apply_filters( 'wflux_css_ie_path', $path );
-			$id = apply_filters( 'wflux_css_ie_id', $id );
-			$media = apply_filters( 'wflux_css_ie_media', $media );
-			wp_register_style( $id, $path,'', $version, $media );
-			wp_enqueue_style( $id );
-			// IMPORTANT - Add conditional IE wrapper
-			$GLOBALS['wp_styles']->add_data( 'wfx-ie', 'conditional', 'lt IE 8' );
-		}
-	}
 
+		$container_w = $this->wfx_width; //Overall container width
+		$container_p = $this->wfx_position; //Site container position
+		$sidebar_p = $this->wfx_sidebar_primary_position; //Site container position
+		$columns_num = $this->wfx_columns; // Number of columns
+		$columns_w = $this->wfx_columns_width;	// Width of column
 
-	/**
-	* Inserts main theme CSS
-	*
-	* @since 0.72
-	* @updated 0.93
-	*/
-	function wf_head_css_theme() {
-		$path = WF_THEME.'/style.css';
-		$version = $this->wfx_mytheme_version;
-		$id = 'main-theme';
-		$media = 'screen, projection';
+		// Default
+		$ie_path = WF_CONTENT_URL . '/css/wf-css-dynamic-core-ie.php?w='.$container_w.
+		'&amp;p='.$container_p.
+		'&amp;sbp='.$sidebar_p.
+		'&amp;cw='.$columns_w.
+		'&amp;c='.$columns_num.'';
+
+		// Default
+		$ie_version = 'lt IE 8';
 
 		// Allow filtering
-		$path = apply_filters( 'wflux_css_theme_path', $path );
-		$id = apply_filters( 'wflux_css_theme_id', $id );
-		$media = apply_filters( 'wflux_css_theme_media', $media );
+		$ie_path = apply_filters( 'wflux_head_css_ie_path', $ie_path );
+		$ie_version = apply_filters( 'wflux_head_css_ie_version', $ie_version );
 
-		wp_register_style( $id, $path,'', $version, $media );
-		wp_enqueue_style( $id );
-	}
+		$ie_output = '<!--[if '. $ie_version .']><link rel="stylesheet" href="'. $ie_path .'" type="text/css" media="screen, projection"/><![endif]-->';
 
+		$ie_output = apply_filters( 'wflux_head_css_ie', $ie_output );
+		$ie_output .= "\n";
 
-	/**
-	* Inserts theme CSS sizing parameters - used in filter if required
-	* Picks up on version set as 'ver=wfx-dynamic':
-	* wp_register_style( '', '','','wfx-dynamic','');
-	* Appends Wonderflux size URL params
-	* TODO: Investigate a cleaner way to do this!
-	*
-	* @since 0.93
-	* @updated 0.93
-	*/
-	function wf_head_css_add_args($input) {
-		$vars = '&amp;w='.$this->wfx_width.
-		'&amp;p='.$this->wfx_position.
-		'&amp;sbp='.$this->wfx_sidebar_primary_position.
-		'&amp;cw='.$this->wfx_columns_width.
-		'&amp;c='.$columns_num = $this->wfx_columns.'';
-		return str_replace(array('ver=wfx-dynamic'), array("$vars"), $input);
-	}
+		echo $ie_output;
 
-
-	/**
-	* @since 0.93
-	* @updated 0.93
-	* VERY IMPORTANT!
-	* Removes functionality if child theme override file in place
-	* Requires at least 'style-framework.css' and optionally 'style-framework-ie,css' in your child theme directory
-	*/
-	function wf_head_css_replace() {
-		$path = WF_THEME.'/style-framework.css';
-		$path_ie = WF_THEME.'/style-framework-ie.css';
-		$version = $this->wfx_mytheme_version;
-		$id = 'framework';
-		$id_ie = 'framework-ie';
-		$media = 'screen, projection';
-
-		// Allow filtering
-		$media = apply_filters( 'wflux_css_theme_framework_media', $media );
-
-		wp_register_style( $id, $path,'', $version, $media );
-		wp_enqueue_style( $id );
-
-		wp_register_style( $id_ie, $path_ie,'', $version, $media );
-		wp_enqueue_style( $id_ie );
-
-		// IMPORTANT - Add conditional IE wrapper
-		$GLOBALS['wp_styles']->add_data( $id_ie, 'conditional', 'lt IE 8' );
 	}
 
 
 	/**
 	* @since 0.71
-	* @updated 0.93
+	* @updated 0.92
 	* VERY IMPORTANT!
 	* Close the head of the document after everything has run
-	* Opens body tag using dynamic WordPress body and sidebar/content definition classes
+	* Opens body tag using dynamic WordPress body class
 	*/
 	function wf_head_close($args) {
 
 		//wp_head() core WordPress function should always be inserted directly before the closing </head> tag
 		wp_head();
+
+		// Setup core WordPress body class
+		$this_body_class = get_body_class();
 		$output = '</head>' . "\n";
 		$output .= '<body class="';
-		$output .= join( ' ', get_body_class() );
-		$output .= ( $this->wfx_sidebar_1_display == 'Y' ) ? ' content-with-sidebar-1' : ' content-no-sidebar-1';
-		$output .= ( $this->wfx_sidebar_1_display == 'Y' && $this->wfx_sidebar_primary_position == 'left' ) ? ' sidebar-1-left' : '';
-		$output .= ( $this->wfx_sidebar_1_display == 'Y' && $this->wfx_sidebar_primary_position == 'right' ) ? ' sidebar-1-right' : '';
-		$output .= ' width-'.$this->wfx_width;
+		$output .= join( ' ', $this_body_class );
 		$output .= '">' . "\n";
 		echo $output;
 	}
@@ -366,37 +356,61 @@ class wflux_display_code extends wflux_data {
 
 
 	/**
-	* Returns values as set
-	* Useful when doing conditional layout functionality to test against conditions
-	* @since 0.93
-	* @lastupdate 0.93
-	* TODO: Build rest of elements for output
-	* @return string
+	* Creates the default layout for if Wonderflux is activated directly
+	* @since 0.902
+	* @updated 0.913
 	*/
-	function wf_get_dimensions($size) {
-		switch ($size) {
-			case 'site-width': return $this->wfx_width;
-			case 'columns': return $this->wfx_columns;
-			case 'column-width': return $this->wfx_columns_width;
-			case 'sidebar-1-position': return $this->wfx_sidebar_primary_position;
-			default: return $this->wfx_width;
-		}
+	function wf_default_layout() {
+		add_action( 'wfmain_before_all_content', array ($this, 'wf_default_content') );
+		add_action( 'wfmain_after_all_content', array ($this, 'wf_default_close_div') );
+
+		add_action( 'wfsidebar_before_all', array ($this, 'wf_default_sidebar') );
+		add_action( 'wfsidebar_after_all', array ($this, 'wf_default_close_div') );
 	}
+
+
+	/**
+	* Creates the default layout if Wonderflux is activated directly
+	* @since 0.913
+	* @updated 0.913
+	*/
+	function wf_default_content() { global $wfx; $wfx->css('size=three_quarter&id=content&last=y&divoutput=Y'); }
+
+
+	/**
+	* Creates the default layout if Wonderflux is activated directly
+	* @since 0.913
+	* @updated 0.913
+	*/
+	function wf_default_sidebar() { global $wfx; $wfx->css('size=quarter&id=sidebar&last=y&divoutput=Y'); }
+
+
+	/**
+	* Used in default layout if Wonderflux is activated directly
+	* @since 0.913
+	* @updated 0.913
+	*/
+	function wf_default_close_div() { global $wfx; $wfx->css_close(''); }
 
 }
 
 
 /**
 * @since 0.913
-* @updated 0.93
+* @updated 0.913
 * Core display functions that output CSS
 */
-class wflux_display_css extends wflux_display_code {
+class wflux_display_css extends wflux_data {
 
 	/**
 	*
 	* @since 0.2
-	* @updated 0.93
+	* @updated 0.913
+	* @params
+	* size = MANDITORY - Relative definition - eg 'half', 'quarter', 'twothird'
+	* extra = OPTIONAL - Extra CSS classes you want to include in definition ie 'content-feature'
+	* last = OPTIONAL - Put on last container inside row, eg half, half LAST
+	* move = OPTIONAL - NOT ACTIVE - push and pull a div, not using at moment because we are not using this for sidebar(s) placement
 	*
 	* Defines size conventions to use in template grid systems to avoid putting actual numbers into templates
 	* By using this function to define containers, you can dynamically resize the whole layout
@@ -408,14 +422,6 @@ class wflux_display_css extends wflux_display_code {
 	* You dont have to use these and can just use the normal blueprint CSS style definitions if you like which is generated from your Stylelab options
 	* NOTE: If you don't use this function and revert back to normal BlueprintCSS div sizing, you will loose ability to 'resize' your layout
 	*
-	* @param size = Relative size definition to full width of site - eg 'half', 'quarter', 'twothird'
-	* @param class = Extra CSS classes you want to include in definition, uses spaces if more than one CSS class
-	* @param id = CSS div ID if required
-	* @param last = Put on last container inside row, eg half, half LAST
-	* @param move = Push and pull a div, not using at moment
-	* @param divoutput = Wraps output in opening and closing div tags - useful for blocks of code
-	* @param columns = Size of div in columns, if set over-rides $size
-	*
 	*/
 	function wf_css($args) {
 
@@ -425,8 +431,7 @@ class wflux_display_css extends wflux_display_code {
 			'id' => '',
 			'last' => '',
 			'move' => '',
-			'divoutput' => 'N',
-			'columns' => 0
+			'divoutput' => 'N'
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -489,104 +494,98 @@ class wflux_display_css extends wflux_display_code {
 		$wf_push_eighth = ' ' . $css_push_def . ($wf_columns/8);
 
 		// Setup the core sizing CSS class
-		if ( $columns == 0 || $columns == '' ) {
-
-			switch ($size) {
-				//Define $last - this must always go on the last container in a row
-				case 'full' : $size_def = $wf_columns; $last = ' last'; break;
-				case 'half' : $size_def = ($wf_columns/2); break;
-				case 'single' : $size_def = $wf_single; break;
-				//Suggest use one_third for consistency, but keep this just in-case
-				case 'third' : $size_def = ($wf_columns/3); break;
-				case 'one_third' : $size_def = ($wf_columns/3); break;
-				case 'two_third' : $size_def = ($wf_columns/3*2); break;
-				//Suggest use one_quarter for consistency, but keep this just in-case
-				case 'quarter' : $size_def = ($wf_columns/4); break;
-				case 'one_quarter' : $size_def = ($wf_columns/4); break;
-				case 'two_quarter' : $size_def = ($wf_columns/2); break;
-				case 'three_quarter' : $size_def = ($wf_columns/4*3); break;
-				//Suggest use one_fifth for consistency, but keep this just in-case
-				case 'fifth' : $size_def = ($wf_columns/5); break;
-				case 'one_fifth' : $size_def = ($wf_columns/5); break;
-				case 'two_fifth' : $size_def = ($wf_columns/5*2); break;
-				case 'three_fifth' : $size_def = ($wf_columns/5*3); break;
-				case 'four_fifth' : $size_def = ($wf_columns/5*4); break;
-				//Suggest use one_sixth for consistency, but keep this just in-case
-				case 'sixth' : $size_def = ($wf_columns/6); break;
-				case 'one_sixth' : $size_def = ($wf_columns/6); break;
-				case 'two_sixth' : $size_def = ($wf_columns/6*2); break;
-				case 'three_sixth' : $size_def = ($wf_columns/6*3); break;
-				case 'four_sixth' : $size_def = ($wf_columns/6*4); break;
-				case 'five_sixth' : $size_def = ($wf_columns/6*5); break;
-				//Suggest use one_seventh for consistency, but keep this just in-case
-				case 'seventh' : $size_def = ($wf_columns/7); break;
-				case 'one_seventh' : $size_def = ($wf_columns/7); break;
-				case 'two_seventh' : $size_def = ($wf_columns/7*2); break;
-				case 'three_seventh' : $size_def = ($wf_columns/7*3); break;
-				case 'four_seventh' : $size_def = ($wf_columns/7*4); break;
-				case 'five_seventh' : $size_def = ($wf_columns/7*5); break;
-				case 'six_seventh' : $size_def = ($wf_columns/7*6); break;
-				//Suggest use one_eigth for consistency, but keep this just in-case
-				case 'eigth' : $size_def = ($wf_columns/8); break;
-				case 'one_eigth' : $size_def = ($wf_columns/8); break;
-				case 'two_eigth' : $size_def = ($wf_columns/8*2); break;
-				case 'three_eigth' : $size_def = ($wf_columns/8*3); break;
-				case 'four_eigth' : $size_def = ($wf_columns/8*4); break;
-				case 'five_eigth' : $size_def = ($wf_columns/8*5); break;
-				case 'six_eigth' : $size_def = ($wf_columns/8*6); break;
-				case 'seven_eigth' : $size_def = ($wf_columns/8*7); break;
-				//Suggest use one_ninth for consistency, but keep this just in-case
-				case 'ninth' : $size_def = ($wf_columns/9); break;
-				case 'one_ninth' : $size_def = ($wf_columns/9); break;
-				case 'two_ninth' : $size_def = ($wf_columns/9*2); break;
-				case 'three_ninth' : $size_def = ($wf_columns/9*3); break;
-				case 'four_ninth' : $size_def = ($wf_columns/9*4); break;
-				case 'five_ninth' : $size_def = ($wf_columns/9*5); break;
-				case 'six_ninth' : $size_def = ($wf_columns/9*6); break;
-				case 'seven_ninth' : $size_def = ($wf_columns/9*7); break;
-				case 'eight_ninth' : $size_def = ($wf_columns/9*8); break;
-				//Suggest use one_tenth for consistency, but keep this just in-case
-				case 'tenth' : $size_def = ($wf_columns/10); break;
-				case 'one_tenth' : $size_def = ($wf_columns/10); break;
-				case 'two_tenth' : $size_def = ($wf_columns/10*2); break;
-				case 'three_tenth' : $size_def = ($wf_columns/10*3); break;
-				case 'four_tenth' : $size_def = ($wf_columns/10*4); break;
-				case 'five_tenth' : $size_def = ($wf_columns/10*5); break;
-				case 'six_tenth' : $size_def = ($wf_columns/10*6); break;
-				case 'seven_tenth' : $size_def = ($wf_columns/10*7); break;
-				case 'eight_tenth' : $size_def = ($wf_columns/10*8); break;
-				case 'nine_tenth' : $size_def = ($wf_columns/10*9); break;
-				//Suggest use one_eleventh for consistency, but keep this just in-case
-				case 'eleventh' : $size_def = ($wf_columns/11); break;
-				case 'one_eleventh' : $size_def = ($wf_columns/11); break;
-				case 'two_eleventh' : $size_def = ($wf_columns/11*2); break;
-				case 'three_eleventh' : $size_def = ($wf_columns/11*3); break;
-				case 'four_eleventh' : $size_def = ($wf_columns/11*4); break;
-				case 'five_eleventh' : $size_def = ($wf_columns/11*5); break;
-				case 'six_eleventh' : $size_def = ($wf_columns/11*6); break;
-				case 'seven_eleventh' : $size_def = ($wf_columns/11*7); break;
-				case 'eight_eleventh' : $size_def = ($wf_columns/11*8); break;
-				case 'nine_eleventh' : $size_def = ($wf_columns/11*9); break;
-				case 'ten_eleventh' : $size_def = ($wf_columns/11*10); break;
-				//Suggest use one_twelveth for consistency, but keep this just in-case
-				case 'twelveth' : $size_def = ($wf_columns/12); break;
-				case 'one_twelveth' : $size_def = ($wf_columns/12); break;
-				case 'two_twelveth' : $size_def = ($wf_columns/12*2); break;
-				case 'three_twelveth' : $size_def = ($wf_columns/12*3); break;
-				case 'four_twelveth' : $size_def = ($wf_columns/12*4); break;
-				case 'five_twelveth' : $size_def = ($wf_columns/12*5); break;
-				case 'six_twelveth' : $size_def = ($wf_columns/12*6); break;
-				case 'seven_twelveth' : $size_def = ($wf_columns/12*7); break;
-				case 'eight_twelveth' : $size_def = ($wf_columns/12*8); break;
-				case 'nine_twelveth' : $size_def = ($wf_columns/12*9); break;
-				case 'ten_twelveth' : $size_def = ($wf_columns/12*10); break;
-				case 'eleven_twelveth' : $size_def = ($wf_columns/12*11); break;
-				//Phyew! And finally the default as a fallback
-				default: $size_def = $size_def = $wf_columns; $last = ' last'; break;
-			}
-		} else {
-			// Have columns figure so use it instead
-			if (is_numeric($columns)) { $size_def = $columns; }
+		switch ($size) {
+			//Define $last - this must always go on the last container in a row
+			case 'full' : $size_def = $css_core_def . $wf_columns; $last = ' last'; break;
+			case 'half' : $size_def = $css_core_def . ($wf_columns/2); break;
+			case 'single' : $size_def = $css_core_def . $wf_single; break;
+			//Suggest use one_third for consistency, but keep this just in-case
+			case 'third' : $size_def = $css_core_def . ($wf_columns/3); break;
+			case 'one_third' : $size_def = $css_core_def . ($wf_columns/3); break;
+			case 'two_third' : $size_def = $css_core_def . ($wf_columns/3*2); break;
+			//Suggest use one_quarter for consistency, but keep this just in-case
+			case 'quarter' : $size_def = $css_core_def . ($wf_columns/4); break;
+			case 'one_quarter' : $size_def = $css_core_def . ($wf_columns/4); break;
+			case 'two_quarter' : $size_def = $css_core_def . ($wf_columns/2); break;
+			case 'three_quarter' : $size_def = $css_core_def . ($wf_columns/4*3); break;
+			//Suggest use one_fifth for consistency, but keep this just in-case
+			case 'fifth' : $size_def = $css_core_def . ($wf_columns/5); break;
+			case 'one_fifth' : $size_def = $css_core_def . ($wf_columns/5); break;
+			case 'two_fifth' : $size_def = $css_core_def . ($wf_columns/5*2); break;
+			case 'three_fifth' : $size_def = $css_core_def . ($wf_columns/5*3); break;
+			case 'four_fifth' : $size_def = $css_core_def . ($wf_columns/5*4); break;
+			//Suggest use one_sixth for consistency, but keep this just in-case
+			case 'sixth' : $size_def = $css_core_def . ($wf_columns/6); break;
+			case 'one_sixth' : $size_def = $css_core_def . ($wf_columns/6); break;
+			case 'two_sixth' : $size_def = $css_core_def . ($wf_columns/6*2); break;
+			case 'three_sixth' : $size_def = $css_core_def . ($wf_columns/6*3); break;
+			case 'four_sixth' : $size_def = $css_core_def . ($wf_columns/6*4); break;
+			case 'five_sixth' : $size_def = $css_core_def . ($wf_columns/6*5); break;
+			//Suggest use one_seventh for consistency, but keep this just in-case
+			case 'seventh' : $size_def = $css_core_def . ($wf_columns/7); break;
+			case 'one_seventh' : $size_def = $css_core_def . ($wf_columns/7); break;
+			case 'two_seventh' : $size_def = $css_core_def . ($wf_columns/7*2); break;
+			case 'three_seventh' : $size_def = $css_core_def . ($wf_columns/7*3); break;
+			case 'four_seventh' : $size_def = $css_core_def . ($wf_columns/7*4); break;
+			case 'five_seventh' : $size_def = $css_core_def . ($wf_columns/7*5); break;
+			case 'six_seventh' : $size_def = $css_core_def . ($wf_columns/7*6); break;
+			//Suggest use one_eigth for consistency, but keep this just in-case
+			case 'eigth' : $size_def = $css_core_def . ($wf_columns/8); break;
+			case 'one_eigth' : $size_def = $css_core_def . ($wf_columns/8); break;
+			case 'two_eigth' : $size_def = $css_core_def . ($wf_columns/8*2); break;
+			case 'three_eigth' : $size_def = $css_core_def . ($wf_columns/8*3); break;
+			case 'four_eigth' : $size_def = $css_core_def . ($wf_columns/8*4); break;
+			case 'five_eigth' : $size_def = $css_core_def . ($wf_columns/8*5); break;
+			case 'six_eigth' : $size_def = $css_core_def . ($wf_columns/8*6); break;
+			case 'seven_eigth' : $size_def = $css_core_def . ($wf_columns/8*7); break;
+			//Suggest use one_ninth for consistency, but keep this just in-case
+			case 'ninth' : $size_def = $css_core_def . ($wf_columns/9); break;
+			case 'one_ninth' : $size_def = $css_core_def . ($wf_columns/9); break;
+			case 'two_ninth' : $size_def = $css_core_def . ($wf_columns/9*2); break;
+			case 'three_ninth' : $size_def = $css_core_def . ($wf_columns/9*3); break;
+			case 'four_ninth' : $size_def = $css_core_def . ($wf_columns/9*4); break;
+			case 'five_ninth' : $size_def = $css_core_def . ($wf_columns/9*5); break;
+			case 'six_ninth' : $size_def = $css_core_def . ($wf_columns/9*6); break;
+			case 'seven_ninth' : $size_def = $css_core_def . ($wf_columns/9*7); break;
+			case 'eight_ninth' : $size_def = $css_core_def . ($wf_columns/9*8); break;
+			//Suggest use one_tenth for consistency, but keep this just in-case
+			case 'tenth' : $size_def = $css_core_def . ($wf_columns/10); break;
+			case 'one_tenth' : $size_def = $css_core_def . ($wf_columns/10); break;
+			case 'two_tenth' : $size_def = $css_core_def . ($wf_columns/10*2); break;
+			case 'three_tenth' : $size_def = $css_core_def . ($wf_columns/10*3); break;
+			case 'four_tenth' : $size_def = $css_core_def . ($wf_columns/10*4); break;
+			case 'five_tenth' : $size_def = $css_core_def . ($wf_columns/10*5); break;
+			case 'six_tenth' : $size_def = $css_core_def . ($wf_columns/10*6); break;
+			case 'seven_tenth' : $size_def = $css_core_def . ($wf_columns/10*7); break;
+			case 'eight_tenth' : $size_def = $css_core_def . ($wf_columns/10*8); break;
+			case 'nine_tenth' : $size_def = $css_core_def . ($wf_columns/10*9); break;
+			//Suggest use one_eleventh for consistency, but keep this just in-case
+			case 'eleventh' : $size_def = $css_core_def . ($wf_columns/11); break;
+			case 'one_eleventh' : $size_def = $css_core_def . ($wf_columns/11); break;
+			case 'two_eleventh' : $size_def = $css_core_def . ($wf_columns/11*2); break;
+			case 'three_eleventh' : $size_def = $css_core_def . ($wf_columns/11*3); break;
+			case 'four_eleventh' : $size_def = $css_core_def . ($wf_columns/11*4); break;
+			case 'five_eleventh' : $size_def = $css_core_def . ($wf_columns/11*5); break;
+			case 'six_eleventh' : $size_def = $css_core_def . ($wf_columns/11*6); break;
+			case 'seven_eleventh' : $size_def = $css_core_def . ($wf_columns/11*7); break;
+			case 'eight_eleventh' : $size_def = $css_core_def . ($wf_columns/11*8); break;
+			case 'nine_eleventh' : $size_def = $css_core_def . ($wf_columns/11*9); break;
+			case 'ten_eleventh' : $size_def = $css_core_def . ($wf_columns/11*10); break;
+			//Suggest use one_twelveth for consistency, but keep this just in-case
+			case 'twelveth' : $size_def = $css_core_def . ($wf_columns/12); break;
+			case 'one_twelveth' : $size_def = $css_core_def . ($wf_columns/12); break;
+			case 'two_twelveth' : $size_def = $css_core_def . ($wf_columns/12*2); break;
+			case 'three_twelveth' : $size_def = $css_core_def . ($wf_columns/12*3); break;
+			case 'four_twelveth' : $size_def = $css_core_def . ($wf_columns/12*4); break;
+			case 'five_twelveth' : $size_def = $css_core_def . ($wf_columns/12*5); break;
+			case 'six_twelveth' : $size_def = $css_core_def . ($wf_columns/12*6); break;
+			case 'seven_twelveth' : $size_def = $css_core_def . ($wf_columns/12*7); break;
+			case 'eight_twelveth' : $size_def = $css_core_def . ($wf_columns/12*8); break;
+			case 'nine_twelveth' : $size_def = $css_core_def . ($wf_columns/12*9); break;
+			case 'ten_twelveth' : $size_def = $css_core_def . ($wf_columns/12*10); break;
+			case 'eleven_twelveth' : $size_def = $css_core_def . ($wf_columns/12*11); break;
+			//Phyew! And finally the default as a fallback
+			default: $size_def = $size_def = $css_core_def . $wf_columns; $last = ' last'; break;
 		}
 
 		// Setup the optional additional CSS class to move div around
@@ -603,7 +602,7 @@ class wflux_display_css extends wflux_display_code {
 		}
 
 		//OK Lets build this CSS!
-		echo $divout_open_clean . 'class="' . $css_core_def . $size_def . $move_def . $last . $class_clean . '"' . $id_clean . $divout_close_clean;
+		echo $divout_open_clean . 'class="' . $size_def . $move_def . $last . $class_clean . '"' . $id_clean . $divout_close_clean;
 
 	}
 
@@ -707,90 +706,15 @@ class wflux_display_css extends wflux_display_code {
 		echo $css_info;
 	}
 
-
-	/**
-	* @since 0.93
-	* @updated 0.93
-	* Encloses the main site areas in specified layout divs, only when required
-	* NOTE: Inserted at hooks priority 2 or 9, to allow you to hook in with your own functions at:
-	* priority 1 for before everything
-	* priority 4+ if using Wonderflux widgets auto-inserted on a hook
-	*
-	*/
-	function wf_layout_build($args) {
-
-		// Main content
-		if ( $this->wfx_content_1_display == 'Y' && $this->wfx_sidebar_1_display == 'Y' ) {
-				add_action( 'wfmain_before_all_content', array ($this, 'wf_layout_build_content_sb1'), 2 );
-				add_action( 'wfsidebar_before_all', array ($this, 'wf_layout_build_sb1'), 2 );
-				add_action( 'wfmain_after_all_content', array ($this, 'wf_css_close'), 9 );
-				add_action( 'wfsidebar_after_all', array ($this, 'wf_css_close'), 9 );
-		} elseif ( $this->wfx_content_1_display == 'Y' && $this->wfx_sidebar_1_display == 'N' ) {
-				add_action( 'wfmain_before_all_content', array ($this, 'wf_layout_build_content_no_sb1'), 2 );
-				add_action( 'wfmain_after_all_content', array ($this, 'wf_css_close'), 9 );
-		// Experimental - needs more work to remove content display, but this removes the CSS!
-		} elseif ( $this->wfx_content_1_display == 'N' && $this->wfx_sidebar_1_display == 'Y' ) {
-				add_action( 'wfsidebar_before_all', array ($this, 'wf_layout_build_sb1_no_content'), 2 );
-				add_action( 'wfsidebar_after_all', array ($this, 'wf_css_close'), 9 );
-		}
-	}
-
-
-	/**
-	* @since 0.93
-	* @updated 0.93
-	* Sets up required layout divs for sidebar1 WITH content1
-	*/
-	function wf_layout_build_sb1($args) { $this->wf_css('columns='.$this->wfx_sidebar_1_size_columns.'&size='.$this->wfx_sidebar_1_size.'&id='.$this->wfx_sidebar_1_id.'&last=y&divoutput=Y&class=sidebar-1-with-content-1'); }
-
-
-	/**
-	* @since 0.93
-	* @updated 0.93
-	* Sets up required layout divs for sidebar1 WITHOUT content1
-	*/
-	function wf_layout_build_sb1_no_content($args) { $this->wf_css('id='.$this->wfx_sidebar_1_id.'&last=y&divoutput=Y&class=sidebar-1-no-content-1'); }
-
-
-
-	/**
-	* @since 0.93
-	* @updated 0.93
-	* Sets up required layout divs for main content1 WITH sidebar1
-	*/
-	function wf_layout_build_content_sb1($args) { $this->wf_css('columns='.$this->wfx_content_1_size_columns.'&size='.$this->wfx_content_1_size.'&id='.$this->wfx_content_1_id.'&last=y&divoutput=Y&class=content-1-with-sidebar-1'); }
-
-
-	/**
-	* @since 0.93
-	* @updated 0.93
-	* Sets up required layout divs for main content1 WITHOUT sidebar1
-	*/
-	function wf_layout_build_content_no_sb1($args) { $this->wf_css('id='.$this->wfx_content_1_id.'&last=y&divoutput=Y&class=content-1-no-sidebar-1'); }
-
 }
 
 
 /**
 * @since 0.1
-* @updated 0.93
+* @updated 0.913
 * Core display functions that output visible items rendered to page
 */
-class wflux_display extends wflux_display_css {
-
-
-	/**
-	* @since 0.93
-	* @updated 0.93
-	* Sets up Sidebar content
-	*/
-	function wf_get_sidebar($args) {
-		if ( $this->wfx_sidebar_1_display == 'Y' ) {
-			get_sidebar($args);
-		} else {
-			// Silence is golden - more sidebars to come!
-		}
-	}
+class wflux_display {
 
 
 	/**
@@ -1609,98 +1533,6 @@ class wflux_display_extras {
 
 		}
 
-	}
-
-
-	/**
-	 * Creates 'page x of x' output for lists of results like category view and others
-	 * TODO: Add in wp_link_pages type functionality so it can function with paged single pages, not just query lists
-	 *
-	 * @param element - The containing overall XHTML element, if blank, no containing element (setup your own in your theme) [p]
-	 * @param start - The opening text string [Page ]
-	 * @param seperator - The string that seperates the two numbers [ of ]
-	 * @param current_span - CSS span class around current page number (set to blank to remove span) [page_num_current]
-	 * @param total_span - CSS span class around total page number (set to blank to remove span) [page_num_total]
-	 * @param always_show - No output is shown if there is only 1 page of results, setting this to 'Y' will make the counter always show (ie page 1 of 1) [N]
-	 * @param navigation - Display next and previous navigation either side of the page display [N]
-	 * @param navigation_span - CSS span class around current page number (set to blank to remove span) [page_num_nav]
-	 * @param previous - The string that represents the previous link (and space) [&lt; ]
-	 * @param next - The string that represents the next link (and space) [ &gt;]
-	 * @param container - Puts the output inside a div [Y]
-	 * @param container_class - Container CSS class [page-counter-navigation]
-	 *
-	 * @since 0.93
-	 * @updated 0.93
-	 */
-	function wf_page_counter($args) {
-
-		$defaults = array (
-			'element' => 'p',
-			'start' => 'Page ',
-			'seperator' => ' of ',
-			'current_span' => 'page-counter-current',
-			'total_span' => 'page-counter-total',
-			'always_show' => 'N',
-			'navigation' => 'N',
-			'navigation_span' => 'page-counter-navigation',
-			'previous' => '&lt; ',
-			'next' => ' &gt;',
-			'container' => 'Y',
-			'container_class' => 'page-counter'
-		);
-
-		$args = wp_parse_args( $args, $defaults );
-		extract( $args, EXTR_SKIP );
-
-		// Clean up ready to use
-		$element = ($element == 'p') ? $element : wp_kses_data($element, '');
-		$start = ($start == 'Page ') ? $start : wp_kses_data($start, '');
-		$seperator = ($seperator == ' of ') ? $seperator : wp_kses_data($seperator, '');
-		$current_span = ($current_span == ' of ') ? $current_span : wp_kses_data($current_span, '');
-		$total_span = ($total_span == ' of ') ? $total_span : wp_kses_data($total_span, '');
-		$always_show = ($always_show == 'N') ? $always_show : 'Y';
-		$navigation = ($total_span == 'N') ? $navigation : wp_kses_data($navigation, '');
-		$navigation_span = ($total_span == 'page_num_nav') ? $navigation_span : wp_kses_data($navigation_span, '');
-		$previous = ($previous == '&lt; ') ? $previous : wp_kses_data($previous, '');
-		$next = ($next == ' &gt;') ? $next : wp_kses_data($next, '');
-		// If someone has removed the span CSS classes definition, dont render to screen
-		$current_span = (!$current_span == '') ? '<span class="'.$current_span.'">' : '';
-		$current_span_close = (!$current_span == '') ? '</span>' : '';
-		$navigation_span = ($navigation_span == '') ? '<span class="'.$navigation_span.'">' : '';
-		$navigation_span = (!$navigation_span == '') ? '</span>' : '';
-		$navigation_span_close = (!$navigation_span == '') ? '</span>' : '';
-		$total_span = (!$total_span == '') ? '<span class="'.$total_span.'">' : '';
-		$total_span_close = (!$current_span == '') ? '</span>' : '';
-		$container = ($container == 'Y') ? 'Y' : 'N';
-		$container_class = ($container_class == 'page-counter-navigation') ? $container_class : wp_kses_data($container_class, '');
-
-
-		// get total number of pages
-		global $wp_query;
-		$total = $wp_query->max_num_pages;
-
-		// Setup current page
-		$current = 1;
-		$wp_query->query_vars['paged'] > 1 ? $current = $wp_query->query_vars['paged'] : $current = 1;
-
-		$output = ($container == 'Y') ? '<div class="' . $container_class . '">' : '';
-		$output .= ($element == '') ? '' : '<'.$element.'>';
-		$output .= ($navigation == 'N') ? '' : $navigation_span . get_previous_posts_link('&lt; ',0) . $navigation_span_close;
-		$output .= esc_html( $start );
-		$output .= $current_span . $current.$current_span_close;
-		$output .= esc_html( $seperator );
-		$output .= $total_span . $total.$total_span_close;
-		$output .= ($navigation == 'N') ? '' : get_next_posts_link(' &gt;',0);
-		$output .= ($element == '') ? '' : '</'. $element .'>';
-		$output .= ($container == 'Y') ? '</div>' : '';
-
-		// Always show results, even if just one page
-		if ( $always_show == 'Y' ) {
-			return $output;
-		// only render if we have more than one page of results
-		} elseif ( $total > 1 ) {
-			return $output;
-		}
 	}
 
 }

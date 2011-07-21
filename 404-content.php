@@ -1,16 +1,15 @@
 <?php
-/*
- * Core Wonderflux 404 content template part
- *
- * Customise this in your child theme by:
- * - Copying this file to your child theme and customising - it will over-ride this file
+/**
+ * The core get_template_part 404 content
+ * This will be over-ridden if you create a file of the same name in your child theme
  *
  * @package Wonderflux
+ * @since Wonderflux 0.5
  */
 ?>
-<div id="post-0" class="post-0 status-error format-standard hentry">
+<div id="post-0" class="post error404 not-found">
 
-	<h2 class="entry-title"><?php _e( 'Sorry', 'wonderflux' ); ?></h2>
+	<h2><?php _e( 'Sorry', 'wonderflux' ); ?></h2>
 
 	<div class="entry-content">
 

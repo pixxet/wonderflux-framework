@@ -8,9 +8,7 @@
  * 3 - Theme display functions
  * 4 - Theme configuration functions
  * 5 - Script support functions
- * 6 - Admin functions
- * 7 - Wonderflux Core
- * 8 - Add actions to hooks
+ * 6 - Wonderflux Core
  *
  * DON'T HACK ME!! You should not modify the Wonderflux theme framework to avoid issues with updates in the future
  * You have lots of ways to manipulate this from your child theme! http://codex.wordpress.org/Child_Themes
@@ -53,7 +51,7 @@ load_template(TEMPLATEPATH . '/wf-includes/wf-engine.php');
 * @updated 0.913
 * IMPORTANT - Gets type of view
 */
-if ( !function_exists( 'wfx_info_location' ) ) : function wfx_info_location() { global $wfx_helper; return $wfx_helper->info_location(); } endif;
+if ( !function_exists( 'wfx_info_location' ) ) : function wfx_info_location($args) { global $wfx_helper; $wfx_helper->info_location($args); } endif;
 
 /**
 * @since 0.913
@@ -118,60 +116,8 @@ if ( !function_exists( 'wfx_custom_field' ) ) : function wfx_custom_field($args)
 } endif;
 
 
-/**
-* @since 0.93
-* @updated 0.93
-* Returns 'Y' - nothing more, nothing less
-* Useful for setting values ie add_filter( 'wflux_sidebar_1_display', 'wfx__Y' ) in your child theme
-*/
-if ( !function_exists( 'wfx__Y' ) ) : function wfx__Y() { global $wfx_helper; return $wfx_helper->__Y(); } endif;
-
-/**
-* @since 0.93
-* @updated 0.93
-* Returns 'N' - nothing more, nothing less
-* Useful for setting values ie add_filter( 'wflux_sidebar_1_display', 'wfx__N' ) in your child theme
-*/
-if ( !function_exists( 'wfx__N' ) ) : function wfx__N() { global $wfx_helper; return $wfx_helper->__N(); } endif;
-
-
 ////  2  //////////// DISPLAY FUNCTIONS
 
-
-// Only need functions if have child theme overrides
-if (WF_THEME_FRAMEWORK_REPLACE == false) {
-	/**
-	* @since 0.72
-	* @updated 0.913
-	* Inserts the core framework structure CSS
-	*/
-	if ( !function_exists( 'wfx_display_head_css_structure' ) ) : function wfx_display_head_css_structure($args) { global $wfx; $wfx->head_css_structure($args); } endif;
-
-
-	/**
-	* @since 0.72
-	* @updated 0.913
-	* Inserts the dynamic column CSS builder
-	*/
-	if ( !function_exists( 'wfx_display_head_css_columns' ) ) : function wfx_display_head_css_columns($args) { global $wfx; $wfx->head_css_columns($args); } endif;
-
-	/**
-	* @since 0.72
-	* @updated 0.913
-	* Inserts the core IE CSS
-	*/
-	if ( !function_exists( 'wfx_display_head_css_ie' ) ) : function wfx_display_head_css_ie($args) { global $wfx; $wfx->head_css_ie($args); } endif;
-
-} elseif (WF_THEME_FRAMEWORK_REPLACE == true) {
-
-	/**
-	* @since 0.93
-	* @updated 0.93
-	* Inserts the core IE CSS
-	*/
-	if ( !function_exists( 'wfx_head_css_replace' ) ) : function wfx_head_css_replace($args) { global $wfx; $wfx->head_css_replace($args); } endif;
-
-}
 
 /**
 * @since 0.913
@@ -197,9 +143,37 @@ if ( !function_exists( 'wfx_display_head_title' ) ) : function wfx_display_head_
 /**
 * @since 0.72
 * @updated 0.913
+* Inserts the core framework structure CSS
+*/
+if ( !function_exists( 'wfx_display_head_css_structure' ) ) : function wfx_display_head_css_structure($args) { global $wfx; $wfx->head_css_structure($args); } endif;
+
+/**
+* @since 0.72
+* @updated 0.913
+* Inserts the core typography CSS
+*/
+if ( !function_exists( 'wfx_display_head_css_typography' ) ) : function wfx_display_head_css_typography($args) { global $wfx; $wfx->head_css_typography($args); } endif;
+
+/**
+* @since 0.72
+* @updated 0.913
 * Inserts the core theme CSS
 */
 if ( !function_exists( 'wfx_display_head_css_theme' ) ) : function wfx_display_head_css_theme($args) { global $wfx; $wfx->head_css_theme($args); } endif;
+
+/**
+* @since 0.72
+* @updated 0.913
+* Inserts the dynamic column CSS builder
+*/
+if ( !function_exists( 'wfx_display_head_css_columns' ) ) : function wfx_display_head_css_columns($args) { global $wfx; $wfx->head_css_columns($args); } endif;
+
+/**
+* @since 0.72
+* @updated 0.913
+* Inserts the core IE CSS
+*/
+if ( !function_exists( 'wfx_display_head_css_ie' ) ) : function wfx_display_head_css_ie($args) { global $wfx; $wfx->head_css_ie($args); } endif;
 
 /**
 * @since 0.71
@@ -236,23 +210,9 @@ if ( !function_exists( 'wfx_display_credit' ) ) : function wfx_display_credit($a
 */
 if ( !function_exists( 'wfx_display_css_info' ) ) : function wfx_display_css_info($args) { global $wfx; $wfx->css_info($args); } endif;
 
-/**
-* @since 0.93
-* @updated 0.93
-* Returns saved site dimensions
-*/
-if ( !function_exists( 'wfx_get_dimensions' ) ) : function wfx_get_dimensions($args) { global $wfx; return $wfx->get_dimensions($args); } endif;
-
 
 ////  3  //////////// THEME DISPLAY
 
-
-/**
-* @since 0.93
-* @updated 0.93
-* Gets the sidebar
-*/
-if ( !function_exists( 'wfx_get_sidebar' ) ) : function wfx_get_sidebar($args) { global $wfx; $wfx->get_sidebar($args); } endif;
 
 /**
 * @since 0.913
@@ -267,13 +227,6 @@ if ( !function_exists( 'wfx_css' ) ) : function wfx_css($args) { global $wfx; $w
 * Just echos </div> - nothing more nothing less!
 */
 if ( !function_exists( 'wfx_css_close' ) ) : function wfx_css_close($args) { global $wfx; $wfx->css_close($args); } endif;
-
-/**
-* @since 0.93
-* @updated 0.93
-* IMPORTANT - Creates and controls layout CSS
-*/
-if ( !function_exists( 'wfx_layout_build' ) ) : function wfx_layout_build($args) { global $wfx; $wfx->layout_build($args); } endif;
 
 /**
 * @since 0.913
@@ -348,28 +301,6 @@ if ( !function_exists( 'wfx_static_highlight' ) ) : function wfx_static_highligh
 */
 if ( !function_exists( 'wfx_get_attachments' ) ) : function wfx_get_attachments($args) { global $wfx; $wfx->get_attachments($args); } endif;
 
-/**
-* @since 0.93
-* @updated 0.93
-* Creates 'page x of x' output for lists of results like category view and others
-*/
-if ( !function_exists( 'wfx_page_counter' ) ) : function wfx_page_counter($args) {
-
-	$defaults = array ( 'echo' => 'Y' );
-
-	$args = wp_parse_args( $args, $defaults );
-	extract( $args, EXTR_SKIP );
-
-	global $wfx;
-
-	if ($echo == 'Y') {
-		echo $wfx->page_counter($args);
-	} else {
-		return $wfx->page_counter($args);
-	}
-
-} endif;
-
 
 //  4  //////////// THEME CONFIGURATION
 
@@ -417,29 +348,17 @@ if ( !function_exists( 'wfx_jquery' ) ) : function wfx_jquery($args) { global $w
 if ( !function_exists( 'wfx_js_cycle' ) ) : function wfx_js_cycle($args) { global $wfx_theme; $wfx_theme->cycle($args); } endif;
 
 
-//  6  //////////// ADMIN FUNCTIONS
+//  6  //////////// WONDERFLUX CORE
 
 
-/**
-* @since 0.93
-* @updated 0.93
-* Control the display of Wonderflux admin menus
-*/
-if ( !function_exists( 'wfx_admin_menus' ) ) : function wfx_admin_menus() { global $wfx_admin; $wfx_admin->admin_menus(); } endif;
-
-
-//  7  //////////// WONDERFLUX CORE
-
+// For When Wonderflux gets activated directly
 
 /**
-* @since 0.93
-* @updated 0.93
-* Adds Wonderflux options to appearance menu (respcts WF_ADMIN_ACCESS)
+* @since 0.902
+* @updated 0.913
+* Insert some basic layout divs
 */
-if ( !function_exists( 'wfx_admin_bar_links' ) ) : function wfx_admin_bar_links() { global $wfx_wp_helper; $wfx_wp_helper->admin_bar_links(); } endif;
-
-
-// For when Wonderflux gets activated directly
+function wfx_core_default_layout() { global $wfx; $wfx->default_layout(''); }
 
 /**
 * @since 0.902
@@ -469,39 +388,36 @@ function wfx_core_default_widgets() {
 
 }
 
-
-//  8  //////////// Add actions to hooks
-
-
-// Special child theme function
-// Create the function my_wfx_layout() in your child theme functions file
-// Use this to use and configure Wonderflux layout functions like wfx_background_divs()
-if ( function_exists( 'my_wfx_layout' ) ) { add_action('get_header', 'my_wfx_layout', 1); }
-
-// Core Wonderflux functionality
-
-// Allow full removal of the core CSS in one swoop
-if (WF_THEME_FRAMEWORK_REPLACE == false) {
-	add_action('wf_head_meta', 'wfx_display_head_css_structure', 2);
-	add_action('wf_head_meta', 'wfx_display_head_css_columns', 2);
-	add_action('wf_head_meta', 'wfx_display_head_css_ie', 2);
-} elseif (WF_THEME_FRAMEWORK_REPLACE == true) {
-	add_action('wf_head_meta', 'wfx_head_css_replace', 2);
+// If Wonderflux is activated directly, add basic theme functionality
+if (get_current_theme() == 'Wonderflux Framework') {
+	add_action('get_header', 'wfx_core_default_layout', 1);
+	add_action('wp_loaded', 'wfx_core_default_widgets');
 }
 
-// Core Wonderflux theme activation
-if (get_current_theme() == 'Wonderflux Framework') { add_action('wp_loaded', 'wfx_core_default_widgets'); }
+// Admin menus
+if (is_admin() && current_user_can('manage_options')) {
+	// Build admin menus
+	$wflux_admin_do = new wflux_admin;
+	add_action('admin_menu', array($wflux_admin_do, 'wf_add_pages'));
+	// Setup options
+	add_action( 'admin_init', array($wflux_admin_do, 'wf_register_settings'));
+	// Setup help
+	add_filter('contextual_help', array($wflux_admin_do, 'wf_contextual_help'), 10, 3);
 
+}
+
+// Do Wonderflux
 add_action('init', 'wfx_config_language'); //Need to test if this is ok to load on init
-add_action('get_header', 'wfx_layout_build', 1); // IMPORTANT - Inserts layout divs
 add_action('wf_head_meta', 'wfx_display_head_top', 1);
 add_action('wf_head_meta', 'wfx_display_head_title', 3);
+add_action('wf_head_meta', 'wfx_display_head_css_structure', 3);
+add_action('wf_head_meta', 'wfx_display_head_css_typography', 3);
+add_action('wf_head_meta', 'wfx_display_head_css_columns', 3);
+add_action('wf_head_meta', 'wfx_display_head_css_ie', 3);
 add_action('wf_head_meta', 'wfx_display_head_css_theme', 3);
 add_action('wf_head_meta', 'wfx_display_css_info');
 add_action('wf_head_meta', 'wfx_display_head_close', 12); //IMPORTANT - Set priority to 12 on this action to ensure it runs after any other functions added to wf_head_meta
-add_action('admin_bar_menu', 'wfx_admin_bar_links', 100);
 add_action('wffooter_after_content', 'wfx_display_credit', 1);
 add_action('wf_footer', 'wfx_debug_performance', 12);
 add_action('wf_footer', 'wfx_display_code_credit', 3);
-add_action('auth_redirect', 'wfx_admin_menus'); //Need to test if this is ok to load on this hook - looking for an early enough admin only hook
 ?>
