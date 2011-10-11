@@ -1,28 +1,5 @@
-!! WARNING !!
-
-You have downloaded a development version of the working source code
-from the trunk of the development code! THIS MAY NOT BE 100% STABLE!!
-
-IT IS FOR TESTING AND FEEDBACK ONLY - IT MAY CONTAIN INCOMPLETE CODE.
-
-If you are using this for development purposes, You should make sure
-you have the latest development version available. Non-members may check
-out a read-only working copy from the Google Code SVN:
-http://wonderflux-framework.googlecode.com/svn/trunk/
-
-If you wish to run the current latest public release, visit:
-http://code.google.com/p/wonderflux-framework/downloads/
-
-NOTE: This development version may contain new core functionality, for testing,
-always run the trunk version of WFX Girder theme, which is developed to use the latest
-Wonderflux code, structure and functionality. Refer to the functions.php file
-in particular when upgrading your own themes:
-http://wonderflux-girder-theme.googlecode.com
-
-= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
 WONDERFLUX WORDPRESS THEME FRAMEWORK
-VERSION v0.94alpha
+VERSION v0.931
 
 Copyright (C) 2011 Jonny Allbut / Team Wonderflux - http://wonderflux.com
 
@@ -54,8 +31,8 @@ Just to clarify then - YES, you can use Wonderflux on as many commercial,
 non-commercial, personal WordPress sites as you wish, without any fee
 or subscription required.
 
-Any developers are welcome to offer code contributions - the project is
-open to any ideas and improvements;) The goal is to develop a framework
+Any developers are welcome to offer code contributions - the project is 
+open to any ideas and improvements;) The goal is to develop a framework 
 for everyone to use, for free, to make amazing WordPress sites!
 
 Drop by:
@@ -85,7 +62,167 @@ http://wonderflux-girder-theme.googlecode.com
 
 UPGRADE NOTES
 
-To be populated for release - from revision 158
+38 patches have been applied to the previous release upto revision 157!
+
+IMPORTANT - SOME THINGS HAVE CHANGED! IF YOU HAVE CREATED YOUR OWN WONDERFLUX CHILD THEME - PLEASE CHECK THE CHANGE NOTES AND REVISION REFERENCES BELOW BEFORE DEPLOYING THE NEW VERSION OF WONDERFLUX TO ANY LIVE SERVER!!
+
+The best thing to do is download the <a href="http://code.google.com/p/wonderflux-girder-theme/">Girder v0.7 example child theme</a> and take a look at the functions.php file.
+
+CHANGE NOTES
+
+Full development track can be found at http://code.google.com/p/wonderflux-framework/updates/list
+
+r157
+- Update core Wonderflux admin page text string with space.
+
+r156
+- Close link in wfx_display_credit() function
+
+r155
+- Correct translation .pot contact details
+
+r154
+- First .pot file prepared ready for translators. 
+- More work required to complete translation functionality (scheduled for next release of Wonderflux).
+
+r153
+- Correct typo in wfx_debug_performance() function
+
+r152
+- Cleanup theme display functions for translation.
+
+r151
+- Cleanup theme display functions for translation.
+
+r150
+- Cleanup theme core functions for translation.
+
+r149
+- Cleanup admin functions for translation.
+
+r148
+- Tidy 'Main' admin page and setup for translation.
+
+r147
+- Setup the 'Style Lab' admin page for translation.
+
+r146
+- Setup the 'system' admin page for translation.
+
+r145
+- Amend wf_edit_meta() to function better inside and outside the loop.
+
+r144
+- Update wf_edit_meta function to include 'edit this content' link if static page shown on front page.
+
+r143
+- Minor bug fix for when no options saved.
+
+r142
+- Amend theme building options to allow for future extendability and better efficiency (less repeated code). 
+- New notice when options updated in Wonderflux theme options pages. 
+- Corrects potential bug when options either not saved or on split-up across pages.
+
+r141
+- Reconfigure JQuery function for more flexibility. 
+- New 'host' option for Microsoft CDN. - New 'host' option for JQuery CDN hosting. 
+- New parameter 'https' support for https CDN version (fixes security warning on https site access). 
+- Cycle - Improve compatibility. - New 'host' parameter for Microsoft CDN hosting.
+
+r140
+- Improve Open Graph meta data to detect and correctly tag homepage as 'website' for 'og:type' meta as per Open Graph recommendations. 
+- Populate Open Graph meta data with fallback content if no post data available.
+
+r139
+- Simplify Core CSS ID names for footer and header. 
+
+r138
+- New display functions for social sharing. Each supports asynchronous loading for fast page rendering and multiple individually controllable buttons on one page. 
+- wfx_social_google_plus_1() 
+- Configurable Google+1 button and associated Javascript. 
+- wfx_social_facebook_like() 
+- Configurable Facebook like and share buttons with associated XML namespace definitions and Open Graph meta tags. 
+- wfx_social_twitter_share() 
+- Configurable Twitter share button and associated Javascript. 
+- New function wfx_social_meta() 
+- Builds and inserts social media related meta tags (can be over- ride in child theme). 
+- New admin controls for Facebook account and application ID under advanced tab. 
+- New document definition available 
+- XHTML+RDFa 1.0 
+- New filter wf_head_meta_xml_namespace_main 
+- Control output of default XML namespace definition. 
+- Tidying of internal head building functions. 
+- Fixed bug in wf_head_open internal function - rogue character!
+
+r137
+- New parameter for wfx_excerpt() function 
+- 'trim' (values 'Y'/'N' - default 'Y'). Allows trimming off of punctuation. 
+- Visual enhancement so if you set excerpt_end to '...' you don't ever get ',...' or '....'.
+
+r136
+- Minor typo in update fail notice check notice, end sentence with full stop!
+
+r135
+- Correct bug in layout position for static CSS file style-framework.css output (advanced tab) when using WF_THEME_FRAMEWORK_REPLACE constant.
+
+r134
+- Amends to help information for when Wonderflux is activated directly.
+
+r133
+- Deeper incorporation of Wonderflux guide links into admin pages. 
+- More admin text strings setup ready for translation.
+
+r132
+- Simplify CSS ID names in core theme files. 
+- 'footer-bg-content' changed to 'footer-content'. 
+- 'header-bg-content' changed to 'header-content'.
+
+r131
+- Update contextual help dropdown with new Wonderflux guide link. 
+- Revise general help text and links. 
+- Incorporate relevant documentation into 'Advanced' tab.
+
+r130
+- Allow all core constants to be controlled from a Wonderflux child theme.
+
+r129
+- Update legacy code and improve readme.
+
+r128
+- Changed core header.php theme file to be more in-line with what WordPress theme designers expect and allow easier manipulation. 
+- Bring wp_head() back to header.php template level to ensure hooked functions trigger correctly in 3rd party plugins (and pass silly theme validation!). 
+- Split-up and amend core <head> meta functions, including wfx_display_head_close (depreciated) to allow for easier manipulation. 
+- New wfx_display_body_tag() function in header.php - inserts dynamic opening <body> tag in ouput. Includes core WordPress CSS classes and additional Wonderflux layout classes (was previously bundled together in wfx_display_head_close() core function). 
+- New wfx_display_head_char_set() function - inserts correctly formatted character set data - accomodates HTML5 (was previously bundled together in wfx_display_head_close() core function). 
+- New hook 'wf_output_start' (at the very start of the page output). 
+- New hook 'wf_after_head' (directly after the closing </head> tag).
+
+r127
+- Fixed wfmain_after_home_content and wfmain_after_home_container hooks not triggering when using a page for the 'front page' view.
+
+r126
+- Fixed wfmain_after_home_content and wfmain_after_home_container hooks not triggering when using a page for the 'front page' view.
+
+r125
+- Use WordPress valid tags to describe theme.
+
+r124
+- Remove redundant hook.
+
+r123
+- Update screenshot.
+
+r122
+- Readme update - v0.931alpha detail update
+
+r121
+Wonderflux v0.93 tag archive
+
+r120
+Wonderflux v0.92 tag archive
+
+r119
+Fix new wfx_get_dimensions() so it returns proper values.
 
 = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
