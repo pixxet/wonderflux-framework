@@ -1803,7 +1803,7 @@ class wflux_display_extras {
 	 * @param file_ext - (string) - Defaults to 'php', file extension of the file you want to cache (WITHOUT the '.'!)
 	 * @param expire - (integer) - Length of time (in minutes) that the cache persists.
 	 * @param sanitise_in - ('html'/'none') - Sanitises before saving to cache
-	 * @param sanitise_out - ('html'/'none') - Sanitises before outputting to screen
+	 * @param sanitise_out - ('html'/'none') - Optional sanitisation before outputting to screen
 	 * @param mimify - (Y/N) - Remove whitespace before saving as transient
 	 * @param transient_key - (string) Set different transient option name (OPTIONAL - Transient name defaults to active_theme_name_cache_$part
 	 * @param flushable - (Y/N) - Can the cached item be force flushed/refreshed via url, user must have edit_theme_options capability
@@ -1826,7 +1826,7 @@ class wflux_display_extras {
 			'file_ext' => 'php',
 			'expire' => 100,
 			'sanitise_in' => 'html',
-			'sanitise_out' => 'html',
+			'sanitise_out' => '',
 			'mimify' => 'Y',
 			'transient_key' => '',
 			'flushable' => 'Y',
@@ -1861,7 +1861,7 @@ class wflux_display_extras {
 			}
 		}
 
-		$cached_data = ( $flush_all != true || $flush_all != true ) ? get_transient($transient_key) : false;
+		$cached_data = ( $flush_all != true || $flush_this != true ) ? get_transient($transient_key) : false;
 		$allowed_tags = ($sanitise_in == 'html' || $sanitise_out == 'html') ? $wfx_data_manage->allowed_tags('') : '';
 
 		// Load cache with data
