@@ -1794,21 +1794,25 @@ class wflux_display_extras {
 	/**
 	 * Include a theme template file and cache generated output for desired time
 	 * Works with most things, but may not work with more advanced functions/plugins that inject CSS or JS into header/footer or do other funky stuff!
+	 *
+	 * Transient option saved as Child_Theme_Name_c_$part
+	 *
 	 * If you wish to flush the cached files, append your site url as follows using either of these examples (for logged-in users who can edit theme options):
 	 * Example 1 - flush all files www.mydomain.com/?flushcache_all=1
 	 * Example 2 - flush individual cached element www.mydomain.com/?flushcache_NAME_OF_INCLUDE=1
+	 *
 	 * WARNING: This is kinda experimental and might change - dont use in production just yet!
 	 *
-	 * @param part - (string) - Name of the file in active theme directory you want to include and cache, without file extension.
-	 * @param file_ext - (string) - Defaults to 'php', file extension of the file you want to cache (WITHOUT the '.'!)
-	 * @param expire - (integer) - Length of time (in minutes) that the cache persists.
-	 * @param sanitise_in - ('html'/'none') - Sanitises before saving to cache
-	 * @param sanitise_out - ('html'/'none') - Optional sanitisation before outputting to screen
-	 * @param mimify - (Y/N) - Remove whitespace before saving as transient
-	 * @param transient_key - (string) Set different transient option name (OPTIONAL - Transient name defaults to active_theme_name_cache_$part
-	 * @param flushable - (Y/N) - Can the cached item be force flushed/refreshed via url, user must have edit_theme_options capability
-	 * @param output_start - ('<!--cached-part-start-->') - Added to start of output (not saved in transient, runs through output sanitisation)
-	 * @param output_end - ('<!--cached-part-end-->') - Added to end of output (not saved in transient, runs through output sanitisation)
+	 * @param part - (string) REQUIRED - Name of the file in active theme directory you want to include and cache, without file extension.
+	 * @param file_ext - (string) DEFAULT: 'php' - File extension of the file you want to cache (WITHOUT the '.'!)
+	 * @param expire - (integer) DEFAULT: 360 - Length of time (in minutes) that the cache persists.
+	 * @param sanitise_in - ('html'/'none') DEFAULT: 'html' - Sanitises before saving to cache
+	 * @param sanitise_out - ('html'/'none') DEFAULT: 'none' - Optional sanitisation before outputting to screen
+	 * @param mimify - (Y/N) DEFAULT: 'Y' - Remove whitespace before saving as transient
+	 * @param transient_key - (string) OPTIONAL Set different transient option name (NOTE: will be trimmed to 32 characters max)
+	 * @param flushable - (Y/N) DEFAULT: 'Y' - Can the cached item be force flushed/refreshed via url, user must have edit_theme_options capability
+	 * @param output_start - DEFAULT: '<!--cached-part-start-->' - Added to start of output (not saved in transient, runs through output sanitisation if set)
+	 * @param output_end - DEFAULT: '<!--cached-part-end-->' - Added to end of output (not saved in transient, runs through output sanitisation if set)
 	 *
 	 * @filter wflux_allowed_cached_tags - array of allowed output tags used with kses
 	 *
@@ -1817,14 +1821,14 @@ class wflux_display_extras {
 	 *
 	 * TODO: Extend $sanitise_in and sanitise_out with more options
 	 * TODO: Should this be made location aware?
-	 * NOTES: Only 64 chars allowed in options table name - use 45 characters or fewer - _transient_timeout_{$transient_key}
+	 * NOTES: Deeper transient key length - only 64 chars allowed in options table name? Use 45 characters or 32 max?? - Watch _transient_timeout_{$transient_key}
 	 */
 	function wf_get_cached_part($args) {
 
 		$defaults = array (
 			'part' => '',
 			'file_ext' => 'php',
-			'expire' => 100,
+			'expire' => 360,
 			'sanitise_in' => 'html',
 			'sanitise_out' => '',
 			'mimify' => 'Y',
@@ -1836,36 +1840,35 @@ class wflux_display_extras {
 		$args = wp_parse_args( $args, $defaults );
 		extract( $args, EXTR_SKIP );
 
-		if (!$part) return;
+		if ( !$part ) return;
 
 		// Setup WFX Data management class
 		global $wfx_data_manage;
 
 		$cached_data = false;
-		$expire = ((is_numeric($expire)) ? $expire : 1)*60; // Set to minutes
-		$sanitise_in = ($sanitise_in == 'html') ? 'html' : 'none';
-		$sanitise_out = ($sanitise_out == 'html') ? 'html' : 'none';
+		$expire = ( (is_numeric($expire)) ? $expire : 1 )*60; // Set to minutes
+		$sanitise_in = ( $sanitise_in == 'html' ) ? 'html' : 'none';
+		$sanitise_out = ( $sanitise_out == 'html' ) ? 'html' : 'none';
 
 		// Backpat - depreciated function get_current_theme() in WordPress 3.4
-		$theme_name = preg_replace('/[^a-zA-Z0-9]/','_', ( WF_WORDPRESS_VERSION < 3.4 ) ? get_current_theme() : wp_get_theme()->Name);
-		$transient_key = empty($transient_key) ? $theme_name.'_cache_'.$part : $transient_key;
+		//TODO: Check version_compare() - is < evaluation on constant quicker/easier?
+		$theme_name = preg_replace('/[^a-zA-Z0-9]/','_', ( WF_WORDPRESS_VERSION < 3.4 ) ? get_current_theme() : wp_get_theme()->Name );
+		// TODO: Transient key reported upto 32 characters max - have tested upto 45, 46 was stormy waters!
+		// Best to play on safe side until further teting done (32)
+		$transient_key = mb_substr( empty($transient_key) ? $theme_name.'_c_'.$part : $transient_key , 0, 32);
 
-		// Cache flush control
-		$flush_all  = false;
+		// Cache flush control/load data
 		$flush_this = false;
-		if( $flushable == 'Y' && is_user_logged_in() ) {
-			global $current_user;
-			if ( current_user_can('edit_theme_options') ) {
-				$flush_all  = ( isset($_GET['flushcache_all']) && $_GET['flushcache_all'] == 1 ) ? true : false;
-				$flush_this = ( isset($_GET['flushcache_'.$part.'']) && $_GET['flushcache_'.$part.''] == 1 ) ? true : false;
-			}
+		if( $flushable == 'Y' ) {
+			if ( current_user_can('edit_theme_options') )
+				$flush_this = ( isset($_GET['flushcache_all']) && $_GET['flushcache_all'] == 1 ) ? true : false;
+				$flush_this = ( isset($_GET['flushcache_'.$part.'']) && $_GET['flushcache_'.$part.''] == 1 ) ? true : $flush_this;
 		}
+		$cached_data = ( !$flush_this ) ? get_transient($transient_key) : false;
+		$allowed_tags = ( $sanitise_in == 'html' || $sanitise_out == 'html' ) ? $wfx_data_manage->allowed_tags('') : '';
 
-		$cached_data = ( $flush_all != true || $flush_this != true ) ? get_transient($transient_key) : false;
-		$allowed_tags = ($sanitise_in == 'html' || $sanitise_out == 'html') ? $wfx_data_manage->allowed_tags('') : '';
-
-		// Load cache with data
-		if( empty($cached_data) ){
+		// Refresh cache
+		if( empty( $cached_data ) ){
 			ob_start();
 				locate_template( $part.'.'.$file_ext, true, false );
 				switch ($sanitise_in){
@@ -1873,12 +1876,12 @@ class wflux_display_extras {
 					default: $cached_data = ob_get_contents();
 				}
 			ob_end_clean();
-			set_transient($transient_key, ($mimify == 'Y') ? $wfx_data_manage->strip_whitespace($cached_data) : $cached_data, $expire);
+			set_transient( $transient_key, ($mimify == 'Y') ? $wfx_data_manage->strip_whitespace($cached_data) : $cached_data, $expire );
 		}
 
 		// Output
-		if ( !empty($cached_data) ){
-			switch ($sanitise_out){
+		if ( !empty( $cached_data ) ){
+			switch ( $sanitise_out ){
 				case 'html':
 					return "\n" . wp_kses( $output_start . $cached_data . $output_end, apply_filters( 'wflux_allowed_cached_tags', $allowed_tags ) ) . "\n";
 					break;
