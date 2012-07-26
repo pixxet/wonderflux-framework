@@ -938,6 +938,24 @@ class wflux_display extends wflux_display_css {
 */
 class wflux_display_extras {
 
+	private $clean_theme_name = null;
+
+	/**
+	 * Returns santisied version of current theme name, replacing spaces and other characters (apart from a-z A-Z and 0-9) with _
+	 * Used in cache function (and maybe others in the future!)
+	 * @return string
+	 *
+	 * @since 1.0RC4
+	 * @updated 1.0RC4
+	 * TODO: Check core WP version_compare() - guessing < evaluation on constant quicker/easier?
+	 */
+	private function get_clean_theme_name() {
+		// Backpat - depreciated function get_current_theme() in WordPress 3.4
+		if ( !$this->clean_theme_name )
+			$this->clean_theme_name = preg_replace('/[^a-zA-Z0-9]/','_', ( WF_WORDPRESS_VERSION < 3.4 ) ? get_current_theme() : wp_get_theme()->Name );
+			return $this->clean_theme_name;
+	}
+
 
 	/**
 	 * Function for displaying the excerpt with just a certain number of words
@@ -1850,12 +1868,9 @@ class wflux_display_extras {
 		$sanitise_in = ( $sanitise_in == 'html' ) ? 'html' : 'none';
 		$sanitise_out = ( $sanitise_out == 'html' ) ? 'html' : 'none';
 
-		// Backpat - depreciated function get_current_theme() in WordPress 3.4
-		//TODO: Check version_compare() - is < evaluation on constant quicker/easier?
-		$theme_name = preg_replace('/[^a-zA-Z0-9]/','_', ( WF_WORDPRESS_VERSION < 3.4 ) ? get_current_theme() : wp_get_theme()->Name );
 		// TODO: Transient key reported upto 32 characters max - have tested upto 45, 46 was stormy waters!
 		// Best to play on safe side until further teting done (32)
-		$transient_key = mb_substr( empty($transient_key) ? $theme_name.'_c_'.$part : $transient_key , 0, 32);
+		$transient_key = mb_substr( empty($transient_key) ? $this->get_clean_theme_name() . '_c_' . $part : $transient_key , 0, 32);
 
 		// Cache flush control/load data
 		$flush_this = false;
